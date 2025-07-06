@@ -1,5 +1,5 @@
-# app/routes.py
-from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory
+from tkinter import Image
+from flask import Blueprint, current_app, render_template, request, redirect, url_for, flash, send_from_directory
 import os
 from datetime import datetime
 import uuid
@@ -29,29 +29,56 @@ def index():
 
 @bp.route("/upload", methods=["POST"])
 def upload_file():
-    upload_folder = os.getenv("UPLOAD_FOLDER", "app/static/uploads")
-    if "file" not in request.files:
-        flash("No file selected")
+    if 'file' not in request.files:
+        flash("No file part")
         return redirect(url_for("routes.index"))
-
-    file = request.files["file"]
-
-    if file.filename == "":
-        flash("No file selected")
-        return redirect(url_for("routes.index"))
-
-    if file and allowed_file(file.filename):
-        ext = file.filename.rsplit(".", 1)[1].lower()
-        filename = f"{uuid.uuid4().hex}.{ext}"
-        filepath = os.path.join(upload_folder, filename)
-
-        try:
+    
+    files = request.files.getlist("file")
+    temp_folder = os.path.join(current_app.static_folder, "temp_uploads")
+    os.makedirs(temp_folder, exist_ok=True)
+    
+    for file in files:
+        if file and allowed_file(file.filename):
+            ext = file.filename.rsplit(".", 1)[1].lower()
+            filename = f"{uuid.uuid4().hex}.{ext}"
+            filepath = os.path.join(temp_folder, filename)
             file.save(filepath)
-            resize_image(filepath)
-            flash("Photo added to the sunflower log! 🌻")
-        except Exception as e:
-            flash("Error uploading photo.")
-            print(f"Upload error: {e}")
-    else:
-        flash("Invalid file type.")
+    return redirect(url_for("routes.confirm_upload"))
+
+@bp.route("/confirm", methods=["GET", "POST"])
+def confirm_upload():
+    temp_folder = os.path.join(current_app.static_folder, "temp_uploads")
+    photos = []
+    for filename in os.listdir(temp_folder):
+        if allowed_file(filename):
+            photos.append(filename)
+    return render_template("confirm.html", photos=photos)
+
+@bp.route("/finalize", methods=["POST"])
+def finalize_upload():
+    temp_folder = os.path.join(current_app.static_folder, "temp_uploads")
+    upload_folder = current_app.config["UPLOAD_FOLDER"]
+    os.makedirs(upload_folder, exist_ok=True)
+    
+    confirmed = request.form.getlist("confirm_files")
+    rotate = request.form.get("rotate")
+    
+    for filename in confirmed:
+        temp_path = os.path.join(temp_folder, filename)
+        perm_path = os.path.join(upload_folder, filename)
+        os.rename(temp_path, perm_path)
+    flash("Photos saved to sunflower log!")
     return redirect(url_for("routes.index"))
+
+@bp.route("/rotate_photo/<filename>", methods=["POST"])
+def rotate_photo(filename):
+    temp_folder = os.path.join(current_app.static_folder, "temp_uploads")
+    filepath = os.path.join(temp_folder, filename)
+    try:
+        with Image.open(filepath) as img:
+            rotated = img.rotate(-90, expand=True)
+            rotated.save(filepath)
+        flash("Photo rotated.")
+    except Exception as e:
+        flash(f"Error rotating photo: {e}")
+    return redirect(url_for("routes.confirm_upload"))

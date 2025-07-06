@@ -8,8 +8,6 @@ __pycache__/
 
 # Virtual environments
 venv/
-ENV/
-env/
 
 # Distribution / packaging
 build/
@@ -54,5 +52,5 @@ instance/
 .env
 *.env
 
-# migrations (if you use Flask-Migrate/Alembic, only if you recreate them from scratch)
-migrations/
+# uploads folder now that I cloned the images
+uploads/

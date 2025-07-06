@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirm Photos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>Confirm Your Photos</h2>
+    <form method="post" action="{{ url_for('routes.finalize_upload') }}">
+        <div class="photo-grid">
+            {% for photo in photos %}
+            <div class="photo-item">
+                <img src="{{ url_for('static', filename='temp_uploads/' + photo) }}">
+                <div class="photo-info">
+                <input type="checkbox" name="confirm_files" value="{{ photo }}" checked>
+                Confirm this photo
+                </div>
+                <form method="post" action="{{ url_for('routes.rotate_photo', filename=photo) }}">
+                <button type="submit">🔄 Rotate</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="submit">Finalize Upload</button>
+    </form>
+  </div>
+</body>
+</html>
