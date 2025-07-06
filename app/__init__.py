@@ -4,10 +4,10 @@ from flask import Flask
 import os
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="static")
     app.secret_key = "change-this"
     app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "static", "uploads")
-    app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
+    app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024  # 50 MB
 
     # db.init_app(app)
 

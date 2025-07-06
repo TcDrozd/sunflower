@@ -141,7 +141,7 @@ body {
 ============================================================ */
 .photo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    grid-template-columns: 1fr;
     gap: 20px;
 }
 .photo-item {
@@ -156,7 +156,7 @@ body {
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 .photo-item img {
-    width: 100%;
+    max-width: 100%;
 
     object-fit: cover;
     display: block;
@@ -326,4 +326,22 @@ body {
     background: #2a2a3d;
     color: #bbb;
     border-radius: 15px;
+}
+
+
+
+// reorder later
+
+.finalize-button {
+  width: 100%;
+  font-size: 1.2em;
+  padding: 15px;
+  background-color: #ffc107;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.finalize-button:hover {
+  background-color: #e0a800;
 }

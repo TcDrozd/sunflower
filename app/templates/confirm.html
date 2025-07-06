@@ -8,23 +8,34 @@
 <body>
   <div class="container">
     <h2>Confirm Your Photos</h2>
+
+    <!-- Finalize form -->
     <form method="post" action="{{ url_for('routes.finalize_upload') }}">
-        <div class="photo-grid">
-            {% for photo in photos %}
-            <div class="photo-item">
-                <img src="{{ url_for('static', filename='temp_uploads/' + photo) }}">
-                <div class="photo-info">
-                <input type="checkbox" name="confirm_files" value="{{ photo }}" checked>
-                Confirm this photo
-                </div>
-                <form method="post" action="{{ url_for('routes.rotate_photo', filename=photo) }}">
-                <button type="submit">🔄 Rotate</button>
-                </form>
-            </div>
-            {% endfor %}
+      <div class="photo-grid">
+        {% for photo in photos %}
+        <div class="photo-item">
+          <img src="{{ url_for('static', filename='temp_uploads/thumbs/' + photo) }}" style="max-width:100%;height:auto;">
+          <div class="photo-info">
+            <input type="checkbox" name="confirm_files" value="{{ photo }}" checked>
+            Confirm this photo
+          </div>
         </div>
-        <button type="submit">Finalize Upload</button>
+        {% endfor %}
+      </div>
+      <button type="submit" class="finalize-button">Finalize Upload</button>
     </form>
+
+    <!-- separate rotate forms for each photo -->
+    <div class="photo-grid">
+      {% for photo in photos %}
+      <div class="photo-item">
+        <form method="post" action="{{ url_for('routes.rotate_photo', filename=photo) }}">
+          <button type="submit" class="rotate-button">🔄 Rotate {{ photo }}</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+
   </div>
 </body>
 </html>

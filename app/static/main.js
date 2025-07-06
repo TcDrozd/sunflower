@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll(".photo-item img").forEach(img => {
     img.addEventListener("click", function(){
         modal.style.display = "block";
-        modalImg.src = this.src;
+        modalImg.src = this.dataset.fullsize;
     });
     });
 
@@ -44,3 +44,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     });
 });
+
