@@ -1,0 +1,58 @@
+# OVERKILL
+
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
+
+# Logs
+*.log
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+coverage.xml
+*.cover
+*.py,cover
+.cache
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.swp
+*.sublime-workspace
+*.sublime-project
+
+# Mac
+.DS_Store
+
+# Flask instance folder (if using it)
+instance/
+
+# Flask static/compiled assets (optional, if you build assets separately)
+*.css.map
+*.js.map
+
+# dotenv
+.env
+*.env
+
+# migrations (if you use Flask-Migrate/Alembic, only if you recreate them from scratch)
+migrations/
