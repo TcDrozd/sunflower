@@ -4,38 +4,72 @@
   <meta charset="UTF-8">
   <title>Confirm Photos</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .photo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .photo-item {
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 1rem;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 180px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
+    }
+    .photo-info {
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .rotate-form {
+      margin-top: 0.5rem;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .rotate-button {
+      background: #f1c40f;
+      border: none;
+      border-radius: 5px;
+      padding: 0.5em 1em;
+      cursor: pointer;
+      margin-top: 0.5em;
+    }
+    .finalize-button {
+      margin-top: 2rem;
+      background: #2ecc40;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.75em 2em;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h2>Confirm Your Photos</h2>
 
-    <!-- Finalize form -->
+    <!-- Finalize form wraps all checkboxes and the finalize button -->
     <form method="post" action="{{ url_for('routes.finalize_upload') }}">
       <div class="photo-grid">
         {% for photo in photos %}
         <div class="photo-item">
           <img src="{{ url_for('static', filename='temp_uploads/thumbs/' + photo) }}" style="max-width:100%;height:auto;">
-          <div class="photo-info">
-            <input type="checkbox" name="confirm_files" value="{{ photo }}" checked>
-            Confirm this photo
-          </div>
+          <input type="hidden" name="confirm_files" value="{{ photo }}">
         </div>
         {% endfor %}
       </div>
       <button type="submit" class="finalize-button">Finalize Upload</button>
     </form>
-
-    <!-- separate rotate forms for each photo -->
-    <div class="photo-grid">
-      {% for photo in photos %}
-      <div class="photo-item">
-        <form method="post" action="{{ url_for('routes.rotate_photo', filename=photo) }}">
-          <button type="submit" class="rotate-button">🔄 Rotate {{ photo }}</button>
-        </form>
-      </div>
-      {% endfor %}
-    </div>
-
   </div>
 </body>
 </html>

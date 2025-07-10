@@ -156,8 +156,7 @@ body {
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 .photo-item img {
-    max-width: 100%;
-
+    max-height: 300px;
     object-fit: cover;
     display: block;
 }
@@ -330,7 +329,7 @@ body {
 
 
 
-// reorder later
+/* reorder later */
 
 .finalize-button {
   width: 100%;

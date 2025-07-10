@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 import uuid
 from werkzeug.utils import secure_filename
-from app.utils import allowed_file, resize_image
+from app.utils import allowed_file, auto_orient_image
 
 
 from PIL.ExifTags import TAGS
@@ -68,9 +68,12 @@ def upload_file():
             # make sure thumbs dir exists
             os.makedirs(os.path.join(temp_folder, "thumbs"), exist_ok=True)
 
-            # now make a thumbnail
+            # now make a thumbnail and auto-orient the image
             from PIL import Image
             with Image.open(filepath) as img:
+                img = auto_orient_image(img)
+                img.save(filepath)  # overwrite original so it’s always upright
+                # create thumbnail
                 img.thumbnail((500, 500))  # max 500px
                 thumb_path = os.path.join(temp_folder, "thumbs", filename)
                 img.save(thumb_path)
@@ -120,7 +123,14 @@ def rotate_photo(filename):
             exif = img.info.get('exif')  # preserve EXIF block
             rotated = img.rotate(-90, expand=True)
             rotated.save(filepath, exif=exif)  # re-attach EXIF
-        flash("Photo rotated, EXIF preserved.")
+
+            # Also regenerate the thumbnail
+            thumbs_dir = os.path.join(temp_folder, "thumbs")
+            os.makedirs(thumbs_dir, exist_ok=True)
+            thumb_path = os.path.join(thumbs_dir, filename)
+            rotated.thumbnail((500, 500))
+            rotated.save(thumb_path)
+        flash("Photo rotated and thumbnail updated.")
     except Exception as e:
         flash(f"Error rotating photo: {e}")
     return redirect(url_for("routes.confirm_upload"))
