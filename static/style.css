@@ -124,6 +124,18 @@ body {
     color: #888;
 }
 
+/* night/light mode toggle */
+.theme-toggle {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+  padding: 0 20px;
+}
+.theme-toggle .active {
+  box-shadow: 0 0 0 3px rgba(255,205,51,0.6);
+  position: relative;
+}
+
 /* Modal */
 .modal {
     display: none;
@@ -218,7 +230,43 @@ body {
     .modal-content { width:95%; margin:5% auto; }
 }
 
-/* Dark / Lunar */
+/* Sun (bright) theme overrides */
+.sun-theme {
+  --bg-gradient-light: linear-gradient(135deg, #fff9f0 0%, #ffe29f 100%);
+  --header-bg: linear-gradient(135deg, #ffcc33 0%, #ff9900 100%);
+  --card-bg: #fffbee;
+  --btn-gradient: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%);
+  --text: #2f2f2f;
+}
+.sun-theme .header {
+  color: #3d2f1b;
+}
+.sun-theme .photo-date {
+  color: #d97706;
+}
+
+/* D/* Lunar / dark theme */
+.lunar-theme, .night-theme {
+    --bg-gradient-light: #0f101a;
+    --header-bg: linear-gradient(135deg, #0b0c2d 0%, #4b367c 100%);
+    --card-bg: #1e1e2f;
+    --btn-gradient: linear-gradient(135deg, #555779 0%, #6f63a6 100%);
+    --muted: #aaa;
+    --text: #e8e8f2;
+}
+.lunar-theme body, .night-theme body {
+    background: var(--bg-gradient-light);
+    color: var(--text);
+}
+.lunar-theme .container, .night-theme .container { background:#1e1e1e; box-shadow:0 10px 30px rgba(255,255,255,0.1); }
+.lunar-theme .header, .night-theme .header { background: linear-gradient(135deg, #0b0c2d 0%, #4b367c 100%); color:#f5f5f5; }
+.lunar-theme .header h1, .night-theme .header h1 { text-shadow:2px 2px 6px rgba(255,255,255,0.3); }
+.lunar-theme .upload-section, .night-theme .upload-section { background:#2a2a3d; border-bottom:1px solid #444466; }
+.lunar-theme .btn, .night-theme .btn { background: #555; }
+.lunar-theme .photo-card, .lunar-theme .photo-item, .night-theme .photo-card, .night-theme .photo-item { background:#2a2a2a; border:1px solid #444; box-shadow:none; }
+.lunar-theme .photo-info, .night-theme .photo-info { color:#ccc; }
+.lunar-theme .photo-date, .night-theme .photo-date { color:#999; }
+ark / Lunar */
 .night-theme body {
     background:#121212;
     color:#f5f5f5;
