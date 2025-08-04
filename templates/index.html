@@ -24,7 +24,12 @@
     <div class="photo-grid">
         {% for photo in photos %}
         <div class="photo-card" onclick="showPhotoModal('{{ photo.id }}')">
-            <img src="/thumbnails/{{ photo.thumbnail }}" alt="Sunflower photo from {{ photo.date_taken or 'Unknown date' }}">
+            <img 
+                class="lazy" 
+                loading="lazy" 
+                src="/thumbnails/{{ photo.thumbnail }}" 
+                data-src="/thumbnails/preview_{{ photo.filename }}" 
+                alt="Sunflower photo from {{ photo.date_taken or 'Unknown date' }}">
             <div class="photo-info">
                 <div class="photo-date">
                     {% if photo.date_taken %}

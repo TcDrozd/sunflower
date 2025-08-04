@@ -4,12 +4,12 @@ import os
 import json
 import uuid
 from datetime import datetime
-from PIL import Image, ExifTags
+from PIL import Image, ExifTags, ImageOps
 import exifread
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024  # 64MB max file size
 
 # Configuration
 UPLOAD_FOLDER = 'uploads'
@@ -105,42 +105,29 @@ def extract_exif_data(image_path):
         'raw_exif': exif_data
     }
 
-def create_thumbnail(image_path, thumbnail_path, size=(300, 300)):
-    """Create thumbnail for uploaded image"""
+def create_thumbnail_versions(src_path, thumb_path, preview_path, thumb_max_size=(300, 300), preview_max_size=(1200, 1200)):
+    """
+    Generates two versions:
+      - thumbnail (small, for grid/placeholder)
+      - preview (larger, still compressed but higher quality for main view)
+    Applies EXIF-based orientation fix and uses Lanczos for better quality.
+    """
     try:
-        with Image.open(image_path) as img:
-                # Auto-rotate image based on EXIF Orientation
-            try:
-                exif = img._getexif()
-                if exif:
-                    orientation_key = next(
-                        (k for k, v in ExifTags.TAGS.items() if v == 'Orientation'), None
-                    )
-                    if orientation_key and orientation_key in exif:
-                        orientation = exif[orientation_key]
-                        if orientation == 3:
-                            img = img.rotate(180, expand=True)
-                        elif orientation == 6:
-                            img = img.rotate(270, expand=True)
-                        elif orientation == 8:
-                            img = img.rotate(90, expand=True)
-            except Exception as e:
-                print(f"EXIF orientation handling failed: {e}")
-            # Convert to RGB if necessary (for PNG with transparency)
-            if img.mode in ('RGBA', 'LA', 'P'):
-                background = Image.new('RGB', img.size, (255, 255, 255))
-                if img.mode == 'P':
-                    img = img.convert('RGBA')
-                background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
-                img = background
-            
-            # Create thumbnail maintaining aspect ratio
-            img.thumbnail(size, Image.Resampling.LANCZOS)
-            img.save(thumbnail_path, 'JPEG', quality=85)
-            return True
+        with Image.open(src_path) as img:
+            # auto-orient based on EXIF
+            img = ImageOps.exif_transpose(img)
+
+            # Thumbnail (small, fast)
+            thumb = img.copy()
+            thumb.thumbnail(thumb_max_size, Image.LANCZOS)
+            thumb.save(thumb_path, format="JPEG", quality=85, optimize=True)
+
+            # Preview (bigger, for grid if you want sharper)
+            preview = img.copy()
+            preview.thumbnail(preview_max_size, Image.LANCZOS)
+            preview.save(preview_path, format="JPEG", quality=90, optimize=True)
     except Exception as e:
-        print(f"Error creating thumbnail: {e}")
-        return False
+        print(f"Thumbnail generation failed for {src_path}: {e}")
 
 @app.route('/')
 def index():
@@ -178,7 +165,11 @@ def upload_photos():
             # Create thumbnail
             thumbnail_filename = f"thumb_{unique_filename}"
             thumbnail_path = os.path.join(THUMBNAIL_FOLDER, thumbnail_filename)
-            create_thumbnail(image_path, thumbnail_path)
+
+            # Create preview version
+            preview_filename = f"preview_{unique_filename}"
+            preview_path = os.path.join(THUMBNAIL_FOLDER, preview_filename)
+            create_thumbnail_versions(image_path, thumbnail_path, preview_path)
             
             # Extract EXIF data
             exif_data = extract_exif_data(image_path)

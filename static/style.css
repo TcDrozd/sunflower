@@ -279,3 +279,6 @@ ark / Lunar */
 .night-theme .photo-card, .night-theme .photo-item { background:#2a2a2a; border:1px solid #444; box-shadow:none; }
 .night-theme .photo-info { color:#ccc; }
 .night-theme .photo-date { color:#999; }
+.theme-toggle .active {
+  box-shadow: 0 0 0 3px rgba(255,205,51,0.6);
+}
