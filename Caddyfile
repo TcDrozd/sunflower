@@ -1,0 +1,16 @@
+{$DOMAIN} {
+    encode zstd gzip
+    @health path /health
+    handle @health {
+        reverse_proxy web:8000
+    }
+
+    reverse_proxy web:8000
+
+    tls {$EMAIL}
+
+    log {
+        output stdout
+        format json
+    }
+}
