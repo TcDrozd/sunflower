@@ -15,6 +15,7 @@ __pycache__/
 # App-specific generated content
 uploads/
 thumbnails/
+photos.json
 *.db
 *.json.bak
 instance/
