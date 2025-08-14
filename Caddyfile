@@ -1,4 +1,7 @@
 {$DOMAIN} {
+    basicauth {
+        trevor capybara2025
+    }
     encode zstd gzip
     @health path /health
     handle @health {
