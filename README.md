@@ -35,3 +35,60 @@ We are working toward a Dockerized deployment that will:
 ---
 
 ## 📁 Project Structure
+
+sunflower2/
+├── app/                  # App logic (routes, helpers)
+├── static/               # Uploads, thumbnails, previews, JS
+├── templates/            # Jinja2 templates
+├── venv/                 # Virtual environment (excluded)
+├── app.py                # App initialization
+├── .gitignore
+└── requirements.txt      # Python dependencies
+
+---
+
+## ⚙️ Running Locally
+
+1. Clone the repo:
+   ```bash
+   git clone git@github.com:TcDrozd/sunflower.git
+   cd sunflower2
+
+	2.	Create a virtual environment and install dependencies:
+
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+
+	3.	Run the app:
+
+python app.py
+
+
+
+Then open your browser to http://127.0.0.1:5000.
+
+⸻
+
+📦 To-Do
+	•	Add Dockerfile and docker-compose.yml
+	•	Enable optional cloud photo storage
+	•	Add tagging or notes for photos
+	•	Improve responsive layout for mobile
+	•	Add user auth (optional for multi-user)
+
+⸻
+
+📝 License
+
+MIT (or specify if you want another).
+
+⸻
+
+🌻 Why?
+
+Because tracking the growth of something you care about is meaningful — and this app makes it beautifully simple.
+Or in other words,
+
+## Because I can
