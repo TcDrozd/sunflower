@@ -116,10 +116,3 @@ def delete_photo(photo_id):
 
     return jsonify({'success': True})
 
-@bp.route('/photo/<photo_id>')
-def get_photo_metadata(photo_id):
-    data = load_photos_data()
-    photo = next((p for p in data if p['id'] == photo_id), None)
-    if not photo:
-        return jsonify({'error': 'Photo not found'}), 404
-    return jsonify(photo)
