@@ -26,3 +26,6 @@ instance/
 
 # Flask instance folder (if used for config)
 app/instance/
+
+# photos.json
+static/photos.json
