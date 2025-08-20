@@ -18,7 +18,7 @@ bp = Blueprint('routes', __name__)
 def index():
     """Main page displaying photo journal"""
     photos_data = load_photos_data(current_app.config['PHOTOS_JSON'])
-    photos_data.sort(key=lambda x: x.get('upload_date', ''), reverse=True)
+    photos_data.sort(key=lambda x: x.get('date_taken', ''), reverse=True)
     return render_template('index.html', photos=photos_data)
 
 @bp.route('/upload', methods=['POST'])
